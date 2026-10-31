@@ -199,22 +199,27 @@
     }
 
     /* ---------- BEEP ---------- */
-    function beep(freq = 1000, duration = 300) {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+function beep(freq = 1000, duration = 100, volume = 1) { // J'ai baissé la durée par défaut à 100ms
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
 
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = freq;
-      osc.type = "square";
-      osc.start();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  
+  osc.frequency.value = freq;
+  osc.type = "square";
+  
+  // Applique le volume (1 = maximum standard sans distorsion)
+  gain.gain.value = volume; 
 
-      setTimeout(() => {
-        osc.stop();
-        ctx.close();
-      }, duration);
-    }
+  osc.start();
+
+  setTimeout(() => {
+    osc.stop();
+    ctx.close();
+  }, duration);
+}
 
     /* ---------- NO BUTTON RUNS ---------- */
     function clamp(n, min, max) {
